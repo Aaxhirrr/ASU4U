@@ -115,6 +115,8 @@ export default function SupportPage() {
         setMemoryItems(updatedHistory);
     };
 
+    const [isTyping, setIsTyping] = useState(false);
+
     const handleSendChat = async () => {
         if (!chatMessage.trim()) return;
 
@@ -128,6 +130,7 @@ export default function SupportPage() {
         const updatedHistory = [...chatHistory, newUserMsg];
         setChatHistory(updatedHistory);
         setChatMessage(""); // Clear input immediately
+        setIsTyping(true); // Start typing indicator
 
         // Call Gemini API
         try {
@@ -154,6 +157,8 @@ export default function SupportPage() {
                 setChatHistory(withReply);
                 localStorage.setItem("dr_morgan_history", JSON.stringify(withReply));
                 setMemoryItems(withReply);
+            } else {
+                throw new Error("No response from AI");
             }
         } catch (error) {
             console.error("Failed to get Dr. Morgan response:", error);
@@ -165,6 +170,8 @@ export default function SupportPage() {
                 timestamp: new Date().toISOString()
             };
             setChatHistory([...updatedHistory, replyMsg]);
+        } finally {
+            setIsTyping(false); // Stop typing indicator
         }
     };
 
@@ -449,6 +456,15 @@ export default function SupportPage() {
                                             </div>
                                         );
                                     })}
+                                    {isTyping && (
+                                        <div className="flex w-full justify-start animate-fade-in">
+                                            <div className="bg-white/10 text-white rounded-2xl rounded-bl-none p-4 flex items-center gap-2">
+                                                <div className="w-2 h-2 rounded-full bg-white/50 animate-bounce" style={{ animationDelay: '0ms' }} />
+                                                <div className="w-2 h-2 rounded-full bg-white/50 animate-bounce" style={{ animationDelay: '150ms' }} />
+                                                <div className="w-2 h-2 rounded-full bg-white/50 animate-bounce" style={{ animationDelay: '300ms' }} />
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="p-6">
                                     <div className="relative flex items-center">
