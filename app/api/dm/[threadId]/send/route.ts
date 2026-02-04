@@ -24,7 +24,7 @@ export async function POST(req: Request, { params }: { params: { threadId: strin
         const worldState = getWorldState();
 
         // Check for API key
-        const apiKey = process.env.GEMINI_API_KEY;
+        const apiKey = process.env.GEMINI_API_KEY || "AIzaSyCs1DAd2aL96vO16xTKXoOG-pHmLMVwUI8";
 
         if (!apiKey) {
             // Fallback: Simple keyword matching response
