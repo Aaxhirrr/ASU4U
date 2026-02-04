@@ -115,7 +115,7 @@ export default function SupportPage() {
         setMemoryItems(updatedHistory);
     };
 
-    const handleSendChat = () => {
+    const handleSendChat = async () => {
         if (!chatMessage.trim()) return;
 
         const newUserMsg: MemoryItem = {
@@ -129,19 +129,43 @@ export default function SupportPage() {
         setChatHistory(updatedHistory);
         setChatMessage(""); // Clear input immediately
 
-        // Simulate reply
-        setTimeout(() => {
+        // Call Gemini API
+        try {
+            const res = await fetch("/api/morgan/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    message: chatMessage,
+                    history: updatedHistory.slice(-10) // Send last 10 messages for context
+                })
+            });
+
+            const data = await res.json();
+
+            if (data.response) {
+                const replyMsg: MemoryItem = {
+                    id: (Date.now() + 1).toString(),
+                    senderId: "dr-morgan",
+                    content: data.response,
+                    timestamp: new Date().toISOString()
+                };
+
+                const withReply = [...updatedHistory, replyMsg];
+                setChatHistory(withReply);
+                localStorage.setItem("dr_morgan_history", JSON.stringify(withReply));
+                setMemoryItems(withReply);
+            }
+        } catch (error) {
+            console.error("Failed to get Dr. Morgan response:", error);
+            // Fallback if API fails
             const replyMsg: MemoryItem = {
                 id: (Date.now() + 1).toString(),
                 senderId: "dr-morgan",
-                content: "I'm listening. Tell me more about that.",
+                content: "I'm having trouble connecting right now, but I'm still here. Can you say that again?",
                 timestamp: new Date().toISOString()
             };
-            const withReply = [...updatedHistory, replyMsg];
-            setChatHistory(withReply);
-            localStorage.setItem("dr_morgan_history", JSON.stringify(withReply));
-            setMemoryItems(withReply);
-        }, 1500);
+            setChatHistory([...updatedHistory, replyMsg]);
+        }
     };
 
     return (
