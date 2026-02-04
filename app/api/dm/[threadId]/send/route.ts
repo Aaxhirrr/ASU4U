@@ -89,9 +89,21 @@ Return ONLY the reply text.
             contents: prompt,
         });
 
+        // Fix: In @google/genai, response.text is a getter or property depending on version.
+        // The safe way is to check existence.
+        let replyText = "";
+        if (typeof response.text === 'function') {
+            // @ts-ignore - Runtime check for some SDK versions
+            replyText = response.text();
+        } else if (response.text) {
+            replyText = response.text;
+        }
+
+        console.log("DM Reply generated:", replyText.substring(0, 50) + "...");
+
         return NextResponse.json({
             success: true,
-            reply: response.text?.trim() || "Hmm, tell me more about that.",
+            reply: replyText.trim() || "Hmm, tell me more about that.",
             bot: { id: bot.id, name: bot.name, photo: bot.profilePhoto }
         });
 
