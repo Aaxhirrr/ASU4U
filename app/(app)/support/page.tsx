@@ -232,7 +232,7 @@ export default function SupportPage() {
                                                 setMorganMode("hub");
                                             } else if (option.id === 'human-chat') {
                                                 // Direct to ASU Counseling Services chat
-                                                window.open('https://eoss.asu.edu/counseling', '_blank');
+                                                window.open('https://eoss.asu.edu/counseling/services/open-call-and-open-chat', '_blank');
                                             } else if (option.id === 'therapists') {
                                                 // Book a session with therapist
                                                 window.open('https://eoss.asu.edu/counseling/services', '_blank');
