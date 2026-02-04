@@ -298,6 +298,22 @@ export default function RegisterPage() {
                             Sign in
                         </motion.button>
                     </motion.div>
+
+                    {/* Subtle Peer Listener Application */}
+                    <motion.div
+                        className="mt-6 pt-4 border-t border-gray-100 flex justify-center text-xs"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.9, duration: 0.4 }}
+                    >
+                        <span className="text-gray-400 mr-1">Want to help others?</span>
+                        <button
+                            className="text-[#8C1C46] hover:text-[#FFC627] transition-colors font-medium hover:underline"
+                            onClick={() => alert("Redirecting to Peer Listener Application...")}
+                        >
+                            Apply to become a Peer Listener
+                        </button>
+                    </motion.div>
                 </motion.div>
             </motion.div>
         </div>

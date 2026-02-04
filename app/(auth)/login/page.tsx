@@ -217,19 +217,40 @@ export default function LoginPage() {
                         className="mt-6 text-center text-sm"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        transition={{ delay: 0.8, duration: 0.4 }}
+                        transition={{ delay: 0.6, duration: 0.4 }}
                     >
                         <span style={{ color: 'hsl(340 10% 45%)' }}>Don't have an account? </span>
                         <motion.button
                             className="font-medium hover:underline"
                             style={{ color: 'hsl(340 66% 33%)' }}
                             onClick={() => router.push("/register")}
-                            data-testid="link-to-register"
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                         >
-                            Create one
+                            Sign up
                         </motion.button>
+                    </motion.div>
+
+                    {/* Subtle Professional Login Options */}
+                    <motion.div
+                        className="mt-8 pt-6 border-t border-gray-100 flex justify-center gap-4 text-xs"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.8, duration: 0.4 }}
+                    >
+                        <button
+                            className="text-gray-400 hover:text-[#8C1C46] transition-colors font-medium"
+                            onClick={() => alert("Redirecting to Therapist Portal...")}
+                        >
+                            Log in as Licensed Therapist
+                        </button>
+                        <span className="text-gray-300">|</span>
+                        <button
+                            className="text-gray-400 hover:text-[#FFC627] transition-colors font-medium"
+                            onClick={() => alert("Redirecting to Peer Listener Portal...")}
+                        >
+                            Log in as Peer Listener
+                        </button>
                     </motion.div>
                 </motion.div>
             </motion.div>
