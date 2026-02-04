@@ -257,6 +257,21 @@ export default function SupportPage() {
                     })}
                 </motion.div>
 
+                {/* Subtle Crisis Line */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                    className="max-w-md mx-auto mt-12 mb-8 text-center"
+                >
+                    <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 backdrop-blur-sm">
+                        <p className="text-white/60 text-sm mb-1">In a crisis?</p>
+                        <p className="text-white/80 font-medium text-sm">
+                            Call or text <span className="text-red-400 font-bold">988</span> or call EMPACT at <a href="tel:4809211006" className="text-red-400 font-bold hover:underline">480-921-1006</a>
+                        </p>
+                    </div>
+                </motion.div>
+
                 <BottomNav />
             </div>
 
