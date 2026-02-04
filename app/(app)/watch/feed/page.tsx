@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { ArrowLeft, Heart, MessageCircle, Share2, MoreHorizontal, Music2, UserPlus, Play, Volume2, VolumeX } from "lucide-react";
@@ -10,7 +10,7 @@ import "@/styles/peerconnect.css";
 // Placeholder data for 5 feed items
 import { VIDEOS } from "@/lib/data/mock-videos";
 
-export default function WatchFeedPage() {
+function WatchFeedContent() {
     const searchParams = useSearchParams();
     const initialIndex = Number(searchParams?.get("index")) || 0;
 
@@ -177,5 +177,13 @@ export default function WatchFeedPage() {
                 </div>
             ))}
         </div>
+    );
+}
+
+export default function WatchFeedPage() {
+    return (
+        <Suspense fallback={<div className="h-[100dvh] w-full bg-black flex items-center justify-center text-white">Loading...</div>}>
+            <WatchFeedContent />
+        </Suspense>
     );
 }
