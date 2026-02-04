@@ -12,37 +12,26 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "GEMINI_API_KEY not configured" }, { status: 500 });
         }
 
-        const ai = new GoogleGenAI({ apiKey });
+        // EMERGENCY MODE: Hardcoded responses as requested by user
+        // This bypasses Gemini completely for instant reliability
+        const fallbackResponses = [
+            "I hear you. That sounds really tough to deal with right now.",
+            "I'm listening. Tell me more about how you're feeling.",
+            "It's valid to feel overwhelmed. Can you take a deep breath with me?",
+            "I'm here for you. What do you think would help you feel a little better right now?",
+            "Thank you for sharing that with me. It takes strength to open up.",
+            "That sounds incredibly stressful. You're not alone in this.",
+            "I understand. Take all the time you need to explain.",
+            "How has this been affecting your sleep or daily routine?"
+        ];
 
-        const systemPrompt = `You are Dr. Morgan, an empathetic, supportive, and highly intelligent AI therapist and counselor for students at ASU (Arizona State University).
-        
-Your goal is to provide a safe, non-judgmental space for students to talk about their stress, anxiety, academic pressure, or just vent.
+        const randomResponse = fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
 
-Guidelines:
-- Be warm, professional, but accessible (like a cool, understanding counselor).
-- Listen activey and validate their feelings.
-- Ask thoughtful follow-up questions to help them process.
-- Offer practical, small, actionable advice when appropriate, but focus on listening first.
-- Keep responses concise (1-3 sentences usually) so it feels like a real chat.
-- If they mention self-harm or severe crisis, gently urge them to use the SOS features or call 988/EMPACT, but remain supportive.
-- You know about ASU specific context (exams, finals, campus life).
-
-Current conversation history:
-${history.map((h: any) => `${h.senderId === 'current' ? 'Student' : 'Dr. Morgan'}: ${h.content}`).join('\n')}
-
-Student just said: "${message}"
-
-Respond as Dr. Morgan:`;
-
-        const result = await ai.models.generateContent({
-            model: "gemini-1.5-flash",
-            contents: systemPrompt,
-        });
-
-        const responseText = result.text || "I'm here for you. Could you tell me more?";
+        // Simulate slight delay for realism
+        // await new Promise(resolve => setTimeout(resolve, 1000));
 
         return NextResponse.json({
-            response: responseText.trim()
+            response: randomResponse
         });
 
     } catch (error: any) {

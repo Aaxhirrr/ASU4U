@@ -104,6 +104,15 @@ export default function GroupsPage() {
                 setJoinedGroups(prev => {
                     const next = new Set(prev);
                     next.add(group.id);
+
+                    // Persist auto-join safely
+                    try {
+                        const currentJoined = JSON.parse(localStorage.getItem('joined_groups') || '[]');
+                        if (!currentJoined.includes(group.id)) {
+                            localStorage.setItem('joined_groups', JSON.stringify([...currentJoined, group.id]));
+                        }
+                    } catch (e) { }
+
                     return next;
                 });
             }
@@ -139,13 +148,43 @@ export default function GroupsPage() {
         }
     };
 
-    const handleJoinGroup = (groupId: string) => {
+    const handleJoinGroup = (groupId: string, e?: React.MouseEvent) => {
+        if (e) {
+            e.stopPropagation();
+            e.preventDefault();
+        }
+
         setJoinedGroups(prev => {
             const next = new Set(prev);
             next.add(groupId);
             return next;
         });
+
+        // Persist to localStorage safely
+        try {
+            const currentJoined = JSON.parse(localStorage.getItem('joined_groups') || '[]');
+            if (!currentJoined.includes(groupId)) {
+                localStorage.setItem('joined_groups', JSON.stringify([...currentJoined, groupId]));
+            }
+        } catch (err) {
+            console.error("Failed to persist group join", err);
+        }
     };
+
+    // Load persisted joins on mount
+    useEffect(() => {
+        try {
+            const stored = localStorage.getItem('joined_groups');
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                setJoinedGroups(prev => {
+                    const next = new Set(prev);
+                    parsed.forEach((id: string) => next.add(id));
+                    return next;
+                });
+            }
+        } catch (e) { }
+    }, []);
 
     const handleSendMessage = async () => {
         if (!messageInput.trim() || !selectedGroup) return;

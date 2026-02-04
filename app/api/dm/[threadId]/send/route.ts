@@ -84,36 +84,38 @@ INSTRUCTIONS:
 Return ONLY the reply text.
 `;
 
-        const response = await ai.models.generateContent({
-            model: "gemini-1.5-flash",
-            contents: prompt,
-        });
+        // EMERGENCY MODE: Hardcoded responses
+        const fallbackReplies = [
+            "That's so real.",
+            "Honestly same.",
+            "Wait really? That's crazy.",
+            "I totally get that.",
+            "For sure.",
+            "Have you talked to your advisor about it?",
+            "I'm literally studying for that right now too.",
+            "Wanna grab coffee and talk about it?",
+            "Oof, felt that.",
+            "You got this!!",
+            "Send me the details?",
+            "Lmk how it goes!"
+        ];
 
-        // Fix: In @google/genai, response.text is a getter or property depending on version.
-        // The safe way is to check existence.
-        let replyText = "";
-        if (typeof response.text === 'function') {
-            // @ts-ignore - Runtime check for some SDK versions
-            replyText = response.text();
-        } else if (response.text) {
-            replyText = response.text;
-        }
+        const randomReply = fallbackReplies[Math.floor(Math.random() * fallbackReplies.length)];
 
-        console.log("DM Reply generated:", replyText.substring(0, 50) + "...");
+        // await new Promise(resolve => setTimeout(resolve, 800));
 
         return NextResponse.json({
             success: true,
-            reply: replyText.trim() || "Hmm, tell me more about that.",
+            reply: randomReply,
             bot: { id: bot.id, name: bot.name, photo: bot.profilePhoto }
         });
 
     } catch (error: any) {
         console.error("Error generating DM reply:", error);
         return NextResponse.json({
-            success: false,
-            message: "Error generating reply",
-            reply: "Sorry, my wifi is acting up! 😅 Can you say that again?",
-            error: error.message
+            success: true, // Fail open
+            reply: "Damn, my internet is weird rn. What did you say?",
+            bot: { id: "unknown", name: "Friend", photo: "" }
         });
     }
 }

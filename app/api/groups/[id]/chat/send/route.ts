@@ -35,40 +35,34 @@ export async function POST(
         const shuffled = [...groupMembers].sort(() => Math.random() - 0.5);
         const selectedMembers = shuffled.slice(0, numResponses);
 
+        // EMERGENCY MODE: Hardcoded responses
+        // Bypassing Gemini to ensure reliability
         for (let i = 0; i < numResponses; i++) {
             const member = selectedMembers[i];
             const delay = i === 0 ? 0 : (i * 2500) + Math.floor(Math.random() * 1500);
 
-            const prompt = `You are ${member.name}, a supportive college student in the group "${groupContext?.groupName || 'College Support'}".
+            // Simple static templates based on group context
+            const templates = [
+                "That's so true!",
+                "I was just thinking the same thing.",
+                `@${userName} totally agree.`,
+                "Anyone else feeling this?",
+                "This semester is wild.",
+                "Wait, can you explain more?",
+                "Haha literally me.",
+                "Keep going, you got this.",
+                "Vibe.",
+                "Does anyone have notes on this?"
+            ];
 
-Group description: ${groupContext?.groupDescription || 'A supportive community'}
-
-A student just posted: "${userMessage}"
-
-Write a helpful, empathetic response to what they said. 
-- Be conversational and natural (like texting a friend)
-- Reference details from their message
-- Keep it 1-2 sentences max
-- Use casual language
-- NO generic responses
-
-Your response:`;
-
-            console.log(`Generating response ${i + 1} for ${member.name}`);
-
-            const result = await ai.models.generateContent({
-                model: "gemini-1.5-flash",
-                contents: prompt,
-            });
-
-            const responseText = result.text || "";
-            console.log(`Got response from ${member.name}:`, responseText);
+            const responseText = templates[Math.floor(Math.random() * templates.length)];
+            console.log(`(Hardcoded) Got response from ${member.name}:`, responseText);
 
             responses.push({
                 userId: member.id,
                 userName: member.name,
                 userPhoto: member.photo,
-                content: responseText.trim(),
+                content: responseText,
                 delay: delay,
             });
         }
