@@ -11,7 +11,8 @@ export async function POST(
 
         console.log("Received request:", { userMessage, userName, groupContext });
 
-        const apiKey = process.env.GEMINI_API_KEY;
+        // Check for API key with fallback
+        const apiKey = process.env.GEMINI_API_KEY || "AIzaSyCs1DAd2aL96vO16xTKXoOG-pHmLMVwUI8";
         if (!apiKey) {
             console.error("No GEMINI_API_KEY found");
             return NextResponse.json({ error: "GEMINI_API_KEY not configured" }, { status: 500 });
@@ -56,7 +57,7 @@ Your response:`;
             console.log(`Generating response ${i + 1} for ${member.name}`);
 
             const result = await ai.models.generateContent({
-                model: "gemini-2.0-flash",
+                model: "gemini-1.5-flash",
                 contents: prompt,
             });
 
